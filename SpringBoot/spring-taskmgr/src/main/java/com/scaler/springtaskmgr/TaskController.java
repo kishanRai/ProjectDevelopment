@@ -13,12 +13,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
 public class TaskController {
-    List<Task> taskList;
+    private final List<Task> taskList;
 
     /**
      * To handle Multi Thread problem related to next TaskId generation
      */
-    AtomicInteger taskId = new AtomicInteger(1);
+    private AtomicInteger taskId = new AtomicInteger(1);
 
 
     /**
