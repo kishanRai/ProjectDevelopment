@@ -1,6 +1,7 @@
 package com.scaler.springtaskmgrv2.entities;
 
 import lombok.Getter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -17,6 +18,8 @@ public abstract class BaseEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
+
+    @CreationTimestamp
     @CreatedDate
     @Column(name = "createdAt", nullable = false)
     private LocalDate createdAt;
