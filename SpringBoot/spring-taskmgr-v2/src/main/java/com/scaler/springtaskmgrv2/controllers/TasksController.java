@@ -78,9 +78,5 @@ public class TasksController {
         return ResponseEntity.accepted().body(tasksService.deleteTaskEntity(id));
     }
 
-    @ExceptionHandler(TasksService.TaskNotFoundException.class)
-    ResponseEntity<ErrorResponse> handleTaskNotFoundException(TasksService.TaskNotFoundException e) {
-        log.error(e.getStackTrace());
-        return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
-    }
+
 }

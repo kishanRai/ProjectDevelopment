@@ -7,6 +7,8 @@ import com.scaler.springtaskmgrv2.repositories.TasksRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class NotesService {
@@ -36,7 +38,7 @@ public class NotesService {
      * @return
      */
     public NoteEntity getSpecificNoteEntity(Long id, Long notesId) {
-        return notesRepository.findNoteEntityByTaskIdAndId(id, notesId);
+        return notesRepository.findNoteEntityByTaskIdAndId(id, notesId).orElseThrow(() -> new NoteNotFoundException(notesId,id));
     }
 
     /**
@@ -62,8 +64,14 @@ public class NotesService {
      * @return
      */
     public NoteEntity deleteNoteEntityWithIDAndTaskID(Long notesID, Long id) {
-        NoteEntity noteEntity = notesRepository.findNoteEntityByTaskIdAndId(id, notesID);
+        NoteEntity noteEntity = notesRepository.findNoteEntityByTaskIdAndId(id, notesID).get();
         notesRepository.delete(noteEntity);
         return noteEntity;
+    }
+
+    public class NoteNotFoundException extends NoSuchElementException {
+        public NoteNotFoundException(Long notesId, Long taskId) {
+            super("NoteEntity with id :" + notesId + "  linked to Task Entity :" +taskId+" not found !!!");
+        }
     }
 }
