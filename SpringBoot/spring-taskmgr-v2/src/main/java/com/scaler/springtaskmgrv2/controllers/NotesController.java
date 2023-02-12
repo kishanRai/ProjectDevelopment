@@ -18,25 +18,52 @@ public class NotesController {
         this.notesService = notesService;
     }
 
+    /**
+     * Gets all the Notes by TaskEntity's ID
+     *
+     * @param id
+     * @return
+     */
     @GetMapping
     ResponseEntity<List<NoteEntity>> getAllNotesWithTaskEntityID(@PathVariable("id") Long id) {
         return ResponseEntity.ok(notesService.getAllNotesLinkedTaskEntity(id));
     }
 
+    /**
+     * Fetches particular NoteEntity of provided TaskEntity ID
+     *
+     * @param id
+     * @param notesId
+     * @return
+     */
     @GetMapping("{notesId}")
-    ResponseEntity<NoteEntity> getSpecificNoteEntity(@PathVariable("id") Long id,@PathVariable("notesId") Long notesId){
-        return ResponseEntity.ok(notesService.getSpecificNoteEntity(id,notesId));
+    ResponseEntity<NoteEntity> getSpecificNoteEntity(@PathVariable("id") Long id, @PathVariable("notesId") Long notesId) {
+        return ResponseEntity.ok(notesService.getSpecificNoteEntity(id, notesId));
     }
 
 
+    /**
+     * Creates a NoteEntity
+     *
+     * @param id
+     * @param noteEntity
+     * @return
+     */
     @PostMapping("/createNote")
     ResponseEntity<NoteEntity> createNoteEntity(@PathVariable("id") Long id, @RequestBody NoteEntity noteEntity) {
         var newNoteEntity = notesService.createNoteEntityWithTaskEntityID(id, noteEntity.getBody());
         return ResponseEntity.created(URI.create("/tasksV2/id/notes/" + newNoteEntity.getId())).body(newNoteEntity);
     }
 
+    /**
+     * Deletes a NoteEntity of given TaskEntity ID
+     *
+     * @param id
+     * @param notesID
+     * @return
+     */
     @DeleteMapping("{notesId}")
-    ResponseEntity<NoteEntity> deleteNoteEntityWithTaskEntityID(@PathVariable("id") Long id,@PathVariable("notesId") Long notesID) {
-        return ResponseEntity.accepted().body(notesService.deleteNoteEntityWithIDAndTaskID(notesID,id));
+    ResponseEntity<NoteEntity> deleteNoteEntityWithTaskEntityID(@PathVariable("id") Long id, @PathVariable("notesId") Long notesID) {
+        return ResponseEntity.accepted().body(notesService.deleteNoteEntityWithIDAndTaskID(notesID, id));
     }
 }
