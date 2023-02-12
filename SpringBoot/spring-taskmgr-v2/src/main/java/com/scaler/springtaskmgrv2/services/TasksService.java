@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class TasksService {
@@ -34,7 +35,7 @@ public class TasksService {
      * @return
      */
     public TaskEntity getTaskEntityByID(Long id) {
-        return tasksRepository.findById(id).orElseThrow();
+        return tasksRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
     }
 
     /**
@@ -60,7 +61,7 @@ public class TasksService {
      * @param dueDate
      * @return
      */
-    public TaskEntity updateTaskEntity(Long id, String title, String description,Boolean completed, LocalDate dueDate) {
+    public TaskEntity updateTaskEntity(Long id, String title, String description, Boolean completed, LocalDate dueDate) {
         var taskTobeUpdated = getTaskEntityByID(id);
         return persistTask(title, description, completed, dueDate, taskTobeUpdated);
     }
@@ -68,7 +69,7 @@ public class TasksService {
     private TaskEntity persistTask(String title, String description, Boolean completed, LocalDate dueDate, TaskEntity taskTobeUpdated) {
         if (null != title) taskTobeUpdated.setTitle(title);
         if (null != description) taskTobeUpdated.setDescription(description);
-        if(null != completed) taskTobeUpdated.setCompleted(completed);
+        if (null != completed) taskTobeUpdated.setCompleted(completed);
         if (null != dueDate) taskTobeUpdated.setDueDate(dueDate);
         tasksRepository.save(taskTobeUpdated);
         return taskTobeUpdated;
@@ -106,4 +107,9 @@ public class TasksService {
     }
 
 
+    public class TaskNotFoundException extends NoSuchElementException {
+        public TaskNotFoundException(Long id) {
+            super("TaskEntity with id :" + id + " not found !!!");
+        }
+    }
 }

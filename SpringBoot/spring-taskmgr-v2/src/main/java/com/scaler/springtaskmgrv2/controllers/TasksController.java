@@ -1,7 +1,9 @@
 package com.scaler.springtaskmgrv2.controllers;
 
+import com.scaler.springtaskmgrv2.dtos.ErrorResponse;
 import com.scaler.springtaskmgrv2.entities.TaskEntity;
 import com.scaler.springtaskmgrv2.services.TasksService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -72,5 +74,10 @@ public class TasksController {
     @DeleteMapping("/{id}")
     ResponseEntity<TaskEntity> deleteTaskEntity(@PathVariable("id") Long id) {
         return ResponseEntity.accepted().body(tasksService.deleteTaskEntity(id));
+    }
+
+    @ExceptionHandler(TasksService.TaskNotFoundException.class)
+    ResponseEntity<ErrorResponse> handleTaskNotFoundException(TasksService.TaskNotFoundException e) {
+        return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
     }
 }
