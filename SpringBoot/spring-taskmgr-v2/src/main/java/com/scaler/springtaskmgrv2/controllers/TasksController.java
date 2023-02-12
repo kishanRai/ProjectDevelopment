@@ -3,6 +3,7 @@ package com.scaler.springtaskmgrv2.controllers;
 import com.scaler.springtaskmgrv2.dtos.ErrorResponse;
 import com.scaler.springtaskmgrv2.entities.TaskEntity;
 import com.scaler.springtaskmgrv2.services.TasksService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
+@Log4j2
 @RestController
 @RequestMapping("/tasksV2")
 public class TasksController {
@@ -78,6 +80,7 @@ public class TasksController {
 
     @ExceptionHandler(TasksService.TaskNotFoundException.class)
     ResponseEntity<ErrorResponse> handleTaskNotFoundException(TasksService.TaskNotFoundException e) {
+        log.error(e.getStackTrace());
         return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
     }
 }
