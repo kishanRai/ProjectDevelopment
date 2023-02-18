@@ -18,6 +18,10 @@ public abstract class BaseEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    /**
+     * TODO : @CreatedDate is used with SQL and NOSQL Database. @CreationTimestamp with NOSQL database only
+     * Need to refactor and use the one
+     */
 
     @CreationTimestamp
     @CreatedDate
