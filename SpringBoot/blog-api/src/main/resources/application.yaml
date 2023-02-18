@@ -3,10 +3,16 @@ server:
 
 spring:
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/blog
+    # Postgres
+    #driver-class-name: org.postgresql.Driver
+    #url: jdbc:postgresql://localhost:5432/blog
+
+    # MySql
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/blog
     username: blog_user
     password: blog_password
+
   jpa:
     hibernate:
       ddl-auto: update
