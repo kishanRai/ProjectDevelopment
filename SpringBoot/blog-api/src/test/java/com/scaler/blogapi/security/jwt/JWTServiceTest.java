@@ -21,10 +21,11 @@ class JWTServiceTest {
 
     /**
      * Current below JUnit method is failing because everytime test runs Instant.now() will be different
+     * So we used protected createJWT with provided IssuedAT Date and ExperesAT Date
      */
     @Test
     void getUserIdFromJWT_Test() {
-        var userId = 1122;
+        long userId = 1122;
         var jwt = jwtService.createJWT(userId, Instant.ofEpochMilli(1677997279),Instant.ofEpochMilli(1677392479));
         Assertions.assertEquals("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMTIyIiwiZXhwIjoxNjc3MzkyLCJpYXQiOjE2Nzc5OTd9.l3q57XJb-z4tgEKna5c4gkollR1fdpHpaw8qZAxHqcc", jwt);
     }
