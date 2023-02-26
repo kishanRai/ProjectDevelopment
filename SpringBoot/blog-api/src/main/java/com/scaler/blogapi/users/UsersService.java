@@ -44,7 +44,7 @@ public class UsersService {
         if (null == userEntity) {
             throw new UserNotFoundException(loginUserDTO.getUsername());
         }
-        // TODO : Encrypt password matching
+
         var passwordMatch = passwordEncoder.matches(loginUserDTO.getPassword(), userEntity.getPassword());
 
         if (!passwordMatch) {

@@ -40,12 +40,12 @@ public class JWTService {
                 .sign(algorithm);
     }
 
-    public Integer getUserIdFromJWT(String jwt) {
+    public Long getUserIdFromJWT(String jwt) {
         try {
             var verifier = JWT.require(algorithm).build();
             var decodedJWT = verifier.verify(jwt);
             var subject = decodedJWT.getSubject();
-            return Integer.parseInt(subject);
+            return Long.parseLong(subject);
         } catch (Exception exception) {
             exception.printStackTrace();
         }
