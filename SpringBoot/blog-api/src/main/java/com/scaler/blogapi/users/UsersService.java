@@ -4,6 +4,8 @@ import com.scaler.blogapi.users.dtos.CreateUserDTO;
 import com.scaler.blogapi.users.dtos.LoginUserDTO;
 import com.scaler.blogapi.users.dtos.UserResponseDTO;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,16 +13,22 @@ public class UsersService {
     private final UsersRespository usersRespository;
     private final ModelMapper modelMapper;
 
-    public UsersService(UsersRespository usersRespository, ModelMapper modelMapper) {
+    private final PasswordEncoder passwordEncoder;
+
+    public UsersService(@Autowired UsersRespository usersRespository,
+                        @Autowired ModelMapper modelMapper,
+                        @Autowired PasswordEncoder passwordEncoder) {
         this.usersRespository = usersRespository;
         this.modelMapper = modelMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UserResponseDTO createUser(CreateUserDTO createUserDTO) {
-        // TODO : Encrpt Password
+
         // TODO : Validate email
         // TODO : Check if username already exisits
         var newUserEntity = modelMapper.map(createUserDTO, UserEntity.class);
+        newUserEntity.setPassword(passwordEncoder.encode(createUserDTO.getPassword()));
         var savedUser = usersRespository.save(newUserEntity);
         return modelMapper.map(savedUser, UserResponseDTO.class);
     }
@@ -33,7 +41,7 @@ public class UsersService {
         }
         // TODO : Encrypt password matching
 
-        if (userEntity.getPassword().equals(loginUserDTO.getPassword())) {
+        if (!userEntity.getPassword().equals(loginUserDTO.getPassword())) {
             throw new IllegalArgumentException("Incorrect Password");
         }
 
