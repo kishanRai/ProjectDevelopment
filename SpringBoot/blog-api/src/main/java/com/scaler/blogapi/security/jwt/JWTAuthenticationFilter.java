@@ -43,7 +43,7 @@ public class JWTAuthenticationFilter extends AuthenticationFilter {
         @Override
         public Authentication convert(HttpServletRequest request) {
             if (null != request.getHeader("Authorization")) {
-                String token = request.getHeader("Authorization").split("\t")[1];
+                String token = request.getHeader("Authorization").split(" ")[1];
                 return new JWTAuthentication(token, null);
             }
             return null;

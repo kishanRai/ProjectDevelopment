@@ -1,5 +1,6 @@
 package com.scaler.blogapi.users;
 
+import com.scaler.blogapi.security.authtokens.AuthTokenService;
 import com.scaler.blogapi.security.jwt.JWTService;
 import com.scaler.blogapi.users.dtos.CreateUserDTO;
 import com.scaler.blogapi.users.dtos.LoginUserDTO;
@@ -17,13 +18,16 @@ public class UsersService {
     private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
 
+    private final AuthTokenService authTokenService;
+
     public UsersService(@Autowired UsersRespository usersRespository,
                         @Autowired ModelMapper modelMapper,
-                        @Autowired PasswordEncoder passwordEncoder, JWTService jwtService) {
+                        @Autowired PasswordEncoder passwordEncoder, JWTService jwtService, AuthTokenService authTokenService) {
         this.usersRespository = usersRespository;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
+        this.authTokenService = authTokenService;
     }
 
     public UserResponseDTO createUser(CreateUserDTO createUserDTO) {
@@ -38,7 +42,7 @@ public class UsersService {
         return userResponseDTO;
     }
 
-    public UserResponseDTO loginUser(LoginUserDTO loginUserDTO) {
+    public UserResponseDTO loginUser(LoginUserDTO loginUserDTO, AuthType authType) {
 
         var userEntity = usersRespository.findByUsername(loginUserDTO.getUsername());
         if (null == userEntity) {
@@ -52,7 +56,10 @@ public class UsersService {
         }
 
         var userResponseDTO = modelMapper.map(userEntity, UserResponseDTO.class);
-        userResponseDTO.setToken(jwtService.createJWT(userEntity.getId()));
+        switch (authType) {
+            case JWT -> userResponseDTO.setToken(jwtService.createJWT(userEntity.getId()));
+            case AUTH_TOKEN -> userResponseDTO.setToken(authTokenService.createAuthToken(userEntity).toString());
+        }
 
         return userResponseDTO;
     }
@@ -65,5 +72,10 @@ public class UsersService {
         public UserNotFoundException(String username) {
             super("User with username:" + username + "not found");
         }
+    }
+
+    static enum AuthType {
+        JWT,
+        AUTH_TOKEN
     }
 }

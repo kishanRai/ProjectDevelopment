@@ -1,5 +1,7 @@
 package com.scaler.blogapi.users;
 
+import com.scaler.blogapi.security.authtokens.AuthTokenRepository;
+import com.scaler.blogapi.security.authtokens.AuthTokenService;
 import com.scaler.blogapi.security.jwt.JWTService;
 import com.scaler.blogapi.users.dtos.CreateUserDTO;
 import org.junit.jupiter.api.Assertions;
@@ -19,6 +21,9 @@ class UsersServiceTest {
     @Autowired
     private UsersRespository usersRespository;
 
+    @Autowired
+    private AuthTokenRepository authTokenRepository;
+
     /**
      * As we are not using @SpringBootTest annotation instead we are using @DataJpaTest which creates layer for repository layer.
      * So we cannot use @Autowired here
@@ -30,7 +35,8 @@ class UsersServiceTest {
             var modelMapper = new ModelMapper();
             var passwordEncoder = new BCryptPasswordEncoder();
             var jwtService = new JWTService();
-            usersService = new UsersService(usersRespository, modelMapper, passwordEncoder, jwtService);
+            var authTokenService = new AuthTokenService(authTokenRepository);
+            usersService = new UsersService(usersRespository, modelMapper, passwordEncoder, jwtService, authTokenService);
         }
         return usersService;
     }
