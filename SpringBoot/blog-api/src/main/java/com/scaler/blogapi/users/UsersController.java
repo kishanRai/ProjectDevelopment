@@ -27,7 +27,7 @@ public class UsersController {
     public ResponseEntity<UserResponseDTO> loginUser(@RequestBody LoginUserDTO loginUserDTO,
                                                      @RequestParam(value = "token", required = false) String token) {
         // If token equals "jwt" (default), generate JWT and if token equals "auth_token" generate auth_token
-        var authType = (token.equals("auth_token")) ? UsersService.AuthType.AUTH_TOKEN : UsersService.AuthType.JWT;
+        var authType = (("auth_token").equals(token)) ? UsersService.AuthType.AUTH_TOKEN : UsersService.AuthType.JWT;
         var loginUser = usersService.loginUser(loginUserDTO, authType);
         return ResponseEntity.ok(loginUser);
     }
